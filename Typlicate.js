@@ -11,8 +11,8 @@ if (Meteor.isClient) {
   });
 
   Template.text.book = function () {
-
-    return Session.get("book");
+    text = Session.get("book");
+    return markdown.toHTML(text);
   };
 }
 
