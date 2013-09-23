@@ -1,1 +1,12 @@
 /* CSS declarations go here */
+body {
+  font-family: 'Merriweather', serif;
+  font-size: 28px;
+  line-height: 175%;
+  padding: 100px;
+}
+
+h1 {
+  font-weight: lighter;
+  color: #1693A5;
+}
