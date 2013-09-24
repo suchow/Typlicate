@@ -20,6 +20,29 @@ if (Meteor.isClient) {
     text = Session.get("book");
     return marked(text);
   };
+
+  Template.text.rendered = function () {
+
+    // Put focus on inputter, and never lose it.
+    $('#inputter').focus();
+    $(function() {
+      $('#inputter').bind('focusout', function(e) {
+        $(this).focus();
+      });
+    });
+
+    // Assign each paragraph an id, starting at 0.
+    x = $("p");
+    for (var i = 0; i <= x.length; i++) {
+      x[i].id = i;
+    };
+  };
+
+  Template.text.events = {
+    "keypress #inputter": function(event) {
+      console.log(String.fromCharCode(event.which));
+    }
+  }
 }
 
 if (Meteor.isServer) {
