@@ -1,8 +1,6 @@
-The Great Gatsby
+The Great Gatsby, by F. Scott Fitzgerald
 
-F. Scott Fitzgerald
-
-## Chapter 1
+## CHAPTER 1
 
 In my younger and more vulnerable years my father gave me some advice
 that I've been turning over in my mind ever since.
@@ -705,7 +703,7 @@ that might have been the end of a dock. When I looked once more for Gatsby
 he had vanished, and I was alone again in the unquiet darkness.
 
 
-## Chapter 2
+## CHAPTER 2
 
 About half way between West Egg and New York the motor-road hastily
 joins the railroad and runs beside it for a quarter of a mile, so as to
@@ -1254,7 +1252,7 @@ Station, staring at the morning "Tribune" and waiting for the four
 o'clock train.
 
 
-## Chapter 3
+## CHAPTER 3
 
 There was music from my neighbor's house through the summer nights. In
 his blue gardens men and girls came and went like moths among the
@@ -1976,7 +1974,7 @@ Every one suspects himself of at least one of the cardinal virtues, and
 this is mine: I am one of the few honest people that I have ever known.
 
 
-## Chapter 4
+## CHAPTER 4
 
 On Sunday morning while church bells rang in the villages along shore
 the world and its mistress returned to Gatsby's house and twinkled
@@ -2667,7 +2665,7 @@ girl beside me, tightening my arms. Her wan, scornful mouth smiled and so
 I drew her up again, closer, this time to my face.
 
 
-## Chapter 5
+## CHAPTER 5
 
 When I came home to West Egg that night I was afraid for a moment that
 my house was on fire. Two o'clock and the whole corner of the peninsula
@@ -3244,7 +3242,7 @@ of the room and down the marble steps into the rain, leaving them there
 together.
 
 
-## Chapter 6
+## CHAPTER 6
 
 About this time an ambitious young reporter from New York arrived one
 morning at Gatsby's door and asked him if he had anything to say.
@@ -3772,7 +3770,7 @@ they made no sound and what I had almost remembered was
 uncommunicable forever.
 
 
-## Chapter 7
+## CHAPTER 7
 
 It was when curiosity about Gatsby was at its highest that the lights
 in his house failed to go on one Saturday night--and, as obscurely as it
@@ -5092,7 +5090,7 @@ the vigil. So I walked away and left him standing there in the
 moonlight--watching over nothing.
 
 
-## Chapter 8
+## CHAPTER 8
 
 I couldn't sleep all night; a fog-horn was groaning incessantly on the
 Sound, and I tossed half-sick between grotesque reality and savage
@@ -5629,7 +5627,7 @@ saw Wilson's body a little way off in the grass, and the holocaust was
 complete.
 
 
-## Chapter 9
+## CHAPTER 9
 
 After two years I remember the rest of that day, and that night and the
 next day, only as an endless drill of police and photographers and
