@@ -100,23 +100,37 @@ if (Meteor.isClient) {
         if (equivalent(chosenSymbol, currentSymbol)) {
           positionInParagraph += 1;
           c = $("#" + numCompleted);
-          c.html('<span class="complete">' + c.text().substring(0, positionInParagraph) + '</span>' + c.text().substring(positionInParagraph, c.text().length))
+          c.html('<span class="complete">' +
+                 c.text().substring(0, positionInParagraph) +
+                 '</span><span id="upcoming"></span>' +
+                 c.text().substring(positionInParagraph, c.text().length))
+          u = $("#upcoming");
           halfway = $(window).height()/2;
-          scrollTo(0,c.offset().top - halfway);
+          scrollTo(0,u.offset().top-200);
         }
 
+        // If we just finished a paragraph, move on to the next one.
         if (positionInParagraph === thisParagraph.length) {
+
+          // Delete the upcoming span from just-completed paragraph.
+          $('#upcoming').remove();
+
+          // Increment.
           numCompleted += 1;
+
+          // Reposition the upcoming span at start of the new paragraph.
           c = $("#" + numCompleted);
+          c.prepend("<span id='upcoming'>")
+
+          // Scrol
           halfway = $(window).height()/2;
-          scrollTo(0,c.offset().top - halfway);
+          u = $("#upcoming");
+          scrollTo(0,u.offset().top-200);
           positionInParagraph = 0;
         }
       }
-
       lockedKeys.push(chosenSymbol);
       lockedKeys = lockedKeys.unique();
-
     });
 
     // Assign each paragraph an id, starting at 0.
