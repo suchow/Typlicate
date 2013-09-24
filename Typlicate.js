@@ -91,7 +91,7 @@ if (Meteor.isClient) {
 
       if(!lockedKeys.contains(chosenSymbol)) {
         // If the current symbol is a newline character, give a free pass.
-        if (currentSymbol === "\n" || currentSymbol === " ") {
+        if (currentSymbol === " ") {
           positionInParagraph += 1;
           currentSymbol = thisParagraph[positionInParagraph];
         };
@@ -105,25 +105,17 @@ if (Meteor.isClient) {
                  '</span><span id="upcoming"></span>' +
                  c.text().substring(positionInParagraph, c.text().length))
           u = $("#upcoming");
-          halfway = $(window).height()/2;
           scrollTo(0,u.offset().top-200);
         }
 
-        // If we just finished a paragraph, move on to the next one.
-        if (positionInParagraph === thisParagraph.length) {
+        // If we just finished a paragraph, move on to the next one w/ return.
+        if (positionInParagraph === thisParagraph.length && event.which == 13) {
 
-          // Delete the upcoming span from just-completed paragraph.
+          // Move the upcoming span to the start of the next paragraph.
           $('#upcoming').remove();
-
-          // Increment.
           numCompleted += 1;
-
-          // Reposition the upcoming span at start of the new paragraph.
           c = $("#" + numCompleted);
           c.prepend("<span id='upcoming'>")
-
-          // Scrol
-          halfway = $(window).height()/2;
           u = $("#upcoming");
           scrollTo(0,u.offset().top-200);
           positionInParagraph = 0;
