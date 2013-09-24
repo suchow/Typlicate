@@ -29,7 +29,6 @@ if (Meteor.isServer) {
 
   Meteor.methods({
     getBook: function (bookName) {
-
       var path = Npm.require('path');
       p = path.join('books', bookName.concat('.md'));
       return Assets.getText(p);
