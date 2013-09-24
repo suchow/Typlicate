@@ -1,5 +1,11 @@
 if (Meteor.isClient) {
 
+  Meteor.startup(function () {
+    marked.setOptions({
+      smartypants: true,
+    });
+  });
+
   Session.get("book", "Loading...");
 
   Meteor.startup(function () {
@@ -12,7 +18,7 @@ if (Meteor.isClient) {
 
   Template.text.book = function () {
     text = Session.get("book");
-    return markdown.toHTML(text);
+    return marked(text);
   };
 }
 
