@@ -70,6 +70,14 @@ if (Meteor.isClient) {
       lockedKeys = [];
     });
 
+    // Disabe backspace.
+    $('body').on('keydown', function(event) {
+      if (event.which === 8) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+    });
+
     $('body').on('keypress', function(event) {
 
       if (event.which == 32) {
