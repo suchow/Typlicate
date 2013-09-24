@@ -105,7 +105,7 @@ if (Meteor.isClient) {
                  '</span><span id="upcoming"></span>' +
                  c.text().substring(positionInParagraph, c.text().length))
           u = $("#upcoming");
-          scrollTo(0,u.offset().top-200);
+          window.smoothScroll(u.offset().top-200);
         }
 
         // If we just finished a paragraph, move on to the next one w/ return.
@@ -117,7 +117,7 @@ if (Meteor.isClient) {
           c = $("#" + numCompleted);
           c.prepend("<span id='upcoming'>")
           u = $("#upcoming");
-          scrollTo(0,u.offset().top-200);
+          window.smoothScroll(u.offset().top-200);
           positionInParagraph = 0;
         }
       }
