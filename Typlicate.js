@@ -6,7 +6,7 @@ if (Meteor.isClient) {
     });
   });
 
-  Session.get("book", "Loading...");
+  Session.set("book", "Loading...");
 
   Meteor.startup(function () {
     Meteor.call('getBook', 'gatsby',
