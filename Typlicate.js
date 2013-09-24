@@ -1,23 +1,3 @@
-Array.prototype.contains = function(obj) {
-  var i = this.length;
-  while (i--) {
-    if (this[i] === obj) {
-        return true;
-    }
-  }
-  return false;
-}
-
-Array.prototype.unique = function() {
-  var arr = [];
-  for(var i = 0; i < this.length; i++) {
-    if(!arr.contains(this[i])) {
-        arr.push(this[i]);
-    }
-  }
-  return arr;
-}
-
 // Should the two characters, c1 and c2, be treated as equivalent?
 var equivalent = function(c1, c2) {
   // If there's a perfect match, accept.
