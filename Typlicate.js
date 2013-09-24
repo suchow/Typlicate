@@ -55,12 +55,13 @@ if (Meteor.isClient) {
 
   Template.text.rendered = function () {
 
-    // Put focus on inputter, and never lose it.
-    $('#inputter').focus();
-    $(function() {
-      $('#inputter').bind('focusout', function(e) {
-        $(this).focus();
-      });
+    $('body').on('keyup', function(event) {
+      lockedKeys = [];
+    });
+
+    $('body').on('keypress', function(event) {
+
+      }
     });
 
     // Assign each paragraph an id, starting at 0.
@@ -76,30 +77,6 @@ if (Meteor.isClient) {
       }
     };
   };
-
-  Template.text.events = {
-    "keypress #inputter": function(event) {
-      event.preventDefault();
-      thisParagraph = $("#" + numCompleted).text();
-      currentSymbol = thisParagraph[positionInParagraph];
-      chosenSymbol = String.fromCharCode(event.which);
-
-      // If the current symbol is a newline character, give a free pass.
-      if (currentSymbol === "\n") {
-        positionInParagraph += 1;
-        currentSymbol = thisParagraph[positionInParagraph];
-      };
-
-      if (equivalent(chosenSymbol, currentSymbol)) {
-        positionInParagraph += 1;
-      }
-
-      if (positionInParagraph === thisParagraph.length) {
-        numCompleted += 1;
-        positionInParagraph = 0;
-      }
-    }
-  }
 }
 
 if (Meteor.isServer) {
