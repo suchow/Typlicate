@@ -8,6 +8,16 @@ Array.prototype.contains = function(obj) {
   return false;
 }
 
+Array.prototype.unique = function() {
+  var arr = [];
+  for(var i = 0; i < this.length; i++) {
+    if(!arr.contains(this[i])) {
+        arr.push(this[i]);
+    }
+  }
+  return arr;
+}
+
 // Should the two characters, c1 and c2, be treated as equivalent?
 var equivalent = function(c1, c2) {
   // If there's a perfect match, accept.
@@ -17,8 +27,8 @@ var equivalent = function(c1, c2) {
 
   // If there's a near match, accept.
   var d = { "\"": ["\“", "\”"],
-            "\’": ["\'"],
-            "—" : ["-"] ,
+            "\'": ["\’"],
+            "-" : ["–"] ,
           };
 
   if (typeof d[c1] !== "undefined" && d[c1].contains(c2)) {
@@ -37,8 +47,9 @@ if (Meteor.isClient) {
   });
 
   Session.set("book", "Loading...");
-  numCompleted = 3;
+  numCompleted = 1;
   positionInParagraph = 0;
+  lockedKeys = [];
 
   Meteor.startup(function () {
     Meteor.call('getBook', 'gatsby',
@@ -61,7 +72,43 @@ if (Meteor.isClient) {
 
     $('body').on('keypress', function(event) {
 
+      if (event.which == 32) {
+        event.stopPropagation();
+        event.preventDefault();
       }
+
+      thisParagraph = $("#" + numCompleted).text();
+      currentSymbol = thisParagraph[positionInParagraph];
+      chosenSymbol = String.fromCharCode(event.which)
+
+      if(!lockedKeys.contains(chosenSymbol)) {
+        // If the current symbol is a newline character, give a free pass.
+        if (currentSymbol === "\n" || currentSymbol === " ") {
+          positionInParagraph += 1;
+          currentSymbol = thisParagraph[positionInParagraph];
+        };
+
+        // If the current symbol matches the input, proceed.
+        if (equivalent(chosenSymbol, currentSymbol)) {
+          positionInParagraph += 1;
+          c = $("#" + numCompleted);
+          c.html('<span class="complete">' + c.text().substring(0, positionInParagraph) + '</span>' + c.text().substring(positionInParagraph, c.text().length))
+          halfway = $(window).height()/2;
+          scrollTo(0,c.offset().top - halfway);
+        }
+
+        if (positionInParagraph === thisParagraph.length) {
+          numCompleted += 1;
+          c = $("#" + numCompleted);
+          halfway = $(window).height()/2;
+          scrollTo(0,c.offset().top - halfway);
+          positionInParagraph = 0;
+        }
+      }
+
+      lockedKeys.push(chosenSymbol);
+      lockedKeys = lockedKeys.unique();
+
     });
 
     // Assign each paragraph an id, starting at 0.
