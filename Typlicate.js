@@ -50,6 +50,14 @@ if (Meteor.isClient) {
       lockedKeys = [];
     });
 
+    // Disabe backspace.
+    $('body').on('keydown', function(event) {
+      if (event.which === 8) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+    });
+
     $('body').on('keypress', function(event) {
 
       if (event.which == 32) {
@@ -63,7 +71,7 @@ if (Meteor.isClient) {
 
       if(!lockedKeys.contains(chosenSymbol)) {
         // If the current symbol is a newline character, give a free pass.
-        if (currentSymbol === "\n" || currentSymbol === " ") {
+        if (currentSymbol === " ") {
           positionInParagraph += 1;
           currentSymbol = thisParagraph[positionInParagraph];
         };
@@ -72,23 +80,29 @@ if (Meteor.isClient) {
         if (equivalent(chosenSymbol, currentSymbol)) {
           positionInParagraph += 1;
           c = $("#" + numCompleted);
-          c.html('<span class="complete">' + c.text().substring(0, positionInParagraph) + '</span>' + c.text().substring(positionInParagraph, c.text().length))
-          halfway = $(window).height()/2;
-          scrollTo(0,c.offset().top - halfway);
+          c.html('<span class="complete">' +
+                 c.text().substring(0, positionInParagraph) +
+                 '</span><span id="upcoming"></span>' +
+                 c.text().substring(positionInParagraph, c.text().length))
+          u = $("#upcoming");
+          window.smoothScroll(u.offset().top-200);
         }
 
-        if (positionInParagraph === thisParagraph.length) {
+        // If we just finished a paragraph, move on to the next one w/ return.
+        if (positionInParagraph === thisParagraph.length && event.which == 13) {
+
+          // Move the upcoming span to the start of the next paragraph.
+          $('#upcoming').remove();
           numCompleted += 1;
           c = $("#" + numCompleted);
-          halfway = $(window).height()/2;
-          scrollTo(0,c.offset().top - halfway);
+          c.prepend("<span id='upcoming'>")
+          u = $("#upcoming");
+          window.smoothScroll(u.offset().top-200);
           positionInParagraph = 0;
         }
       }
-
       lockedKeys.push(chosenSymbol);
       lockedKeys = lockedKeys.unique();
-
     });
 
     // Assign each paragraph an id, starting at 0.
