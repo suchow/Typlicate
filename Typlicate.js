@@ -8,7 +8,7 @@ var equivalent = function(c1, c2) {
   // If there's a near match, accept.
   var d = { "\"": ["\“", "\”"],
             "\'": ["\’"],
-            "-" : ["–"] ,
+            "-" : ["–", "—"],
           };
 
   if (typeof d[c1] !== "undefined" && d[c1].contains(c2)) {
