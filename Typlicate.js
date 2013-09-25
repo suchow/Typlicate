@@ -56,12 +56,18 @@ if (Meteor.isClient) {
 
   Meteor.startup(function () {
     // Reload variables from amplify
-    if(typeof SessionAmplify.get("numCompleted") === "undefined") {
-      SessionAmplify.set("numCompleted", 1);
-    }
     if(typeof SessionAmplify.get("whichBook") === "undefined") {
       SessionAmplify.set("whichBook", "gatsby");
     }
+    if(typeof SessionAmplify.get("numCompleted") === "undefined") {
+      console.log("startup")
+      d = [];
+      lst = {};
+      $("#selectText>option").each(function () {
+        lst[$(this).val()] = 1;
+      });
+      SessionAmplify.set("numCompleted", lst);
+    };
     Meteor.call('getBook', SessionAmplify.get("whichBook"),
       function (error, result) {
         SessionAmplify.set("book", result);
@@ -85,6 +91,9 @@ if (Meteor.isClient) {
 
   Template.text.rendered = function () {
 
+    lst = SessionAmplify.get("numCompleted");
+    numCompleted = lst[SessionAmplify.get("whichBook")];
+
     $('body').on('keyup', function(event) {
       lockedKeys = [];
     });
@@ -99,7 +108,8 @@ if (Meteor.isClient) {
 
     $('body').on('keypress', function(event) {
 
-      var numCompleted = SessionAmplify.get("numCompleted")
+      console.log(numCompleted)
+      console.log("woot")
 
       if (event.which == 32) {
         event.stopPropagation();
@@ -146,16 +156,19 @@ if (Meteor.isClient) {
       lockedKeys = lockedKeys.unique();
 
       // Update amplify storage
-      SessionAmplify.set("numCompleted", numCompleted);
+      console.log(numCompleted)
+      lst[SessionAmplify.get("whichBook")] = numCompleted;
+      SessionAmplify.set("numCompleted", lst);
     });
 
     // Assign each paragraph an id, starting at 0.
     x = $("p");
+
     for (var i = 0; i < x.length; i++) {
       x[i].id = i;
-      if (i >= SessionAmplify.get("numCompleted")) {
+      if (i >= numCompleted) {
         x[i].className += "incomplete";
-      } else if (i == SessionAmplify.get("numCompleted")+1) {
+      } else if (i === numCompleted+1) {
         x[i].className += "current";
       } else {
         x[i].className += "complete";
