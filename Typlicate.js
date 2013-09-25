@@ -75,10 +75,6 @@ if (Meteor.isClient) {
     );
   });
 
-  Template.selectText.rendered = function () {
-    $('#selectText').val(SessionAmplify.get("whichBook"))
-  };
-
   Template.text.book = function () {
     Meteor.call('getBook', SessionAmplify.get("whichBook"),
       function (error, result) {
@@ -90,6 +86,8 @@ if (Meteor.isClient) {
   };
 
   Template.text.rendered = function () {
+
+    $('#selectText').val(SessionAmplify.get("whichBook"))
 
     lst = SessionAmplify.get("numCompleted");
     numCompleted = lst[SessionAmplify.get("whichBook")];
@@ -146,6 +144,7 @@ if (Meteor.isClient) {
         }
 
         // If we just finished a paragraph, move on to the next one w/ return.
+        if (isEndOfParagraph && event.which == 13) {
 
           // Move the upcoming span to the start of the next paragraph.
           $('#upcoming').remove();
