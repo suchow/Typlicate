@@ -30,35 +30,60 @@ if (Meteor.isClient) {
     },
   });
 
+  SessionAmplify.set("book", "Loading...");
+  positionInParagraph = 0;
+  lockedKeys = [];
+
+  Meteor.Router.add({
+    '/:id': function(id) {
+      SessionAmplify.set('whichBook', id);
+    }
+  });
+
+  $(function () {
+    $("#selectText").live("change", function (event) {
+      $('#selectText').blur();
+      Meteor.Router.to('/' + event.target.value);
+      positionInParagraph = 0;
+    });
+  });
+
   Meteor.startup(function () {
     marked.setOptions({
       smartypants: true,
     });
   });
 
-  SessionAmplify.set("book", "Loading...");
-  positionInParagraph = 0;
-  lockedKeys = [];
-
   Meteor.startup(function () {
-    Meteor.call('getBook', 'gatsby',
+    // Reload variables from amplify
+    if(typeof SessionAmplify.get("numCompleted") === "undefined") {
+      SessionAmplify.set("numCompleted", 1);
+    }
+    if(typeof SessionAmplify.get("whichBook") === "undefined") {
+      SessionAmplify.set("whichBook", "gatsby");
+    }
+    Meteor.call('getBook', SessionAmplify.get("whichBook"),
       function (error, result) {
         SessionAmplify.set("book", result);
       }
     );
   });
 
+  Template.selectText.rendered = function () {
+    $('#selectText').val(SessionAmplify.get("whichBook"))
+  };
+
   Template.text.book = function () {
+    Meteor.call('getBook', SessionAmplify.get("whichBook"),
+      function (error, result) {
+        SessionAmplify.set("book", result);
+      }
+    );
     text = SessionAmplify.get("book");
     return marked(text);
   };
 
   Template.text.rendered = function () {
-
-    // Reload variables from amplify
-    if(typeof SessionAmplify.get("numCompleted") === "undefined") {
-      SessionAmplify.set("numCompleted", 1);
-    }
 
     $('body').on('keyup', function(event) {
       lockedKeys = [];

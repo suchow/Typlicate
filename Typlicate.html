@@ -5,8 +5,17 @@
 </head>
 
 <body>
+  {{> selectText}}
   {{> text}}
 </body>
+
+<template name="selectText">
+  <select id="selectText">
+    <option value="gatsby" selected>The Great Gatsby</option>
+    <option value="juicy">Juicy</option>
+    <option value="in-the-desert">In the Desert</option>
+  </select>
+</template>
 
 <template name="text">
   <h1>Typlicate</h1>
