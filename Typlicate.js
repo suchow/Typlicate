@@ -20,6 +20,9 @@ if (Meteor.isClient) {
   Meteor.Router.add({
     '/:id': function (id) {
       SessionAmplify.set('whichBook', id);
+      if(typeof SessionAmplify.get(id) === "undefined") {
+        SessionAmplify.set(id, 1);
+      }
       brCount = 0;
     }
   });
@@ -49,15 +52,6 @@ if (Meteor.isClient) {
     SessionAmplify.set("whichBook", "gatsby");
   }
 
-  // Initialize empty list of progress.
-  if(typeof SessionAmplify.get("numCompleted") === "undefined") {
-    lst = {};
-    $("#selectText>option").each(function () {
-      lst[$(this).val()] = 1;
-    });
-    SessionAmplify.set("numCompleted", lst);
-  };
-
   // Store the full text of the book in local storage.
   Template.text.book = function () {
     Meteor.call('getBook', SessionAmplify.get("whichBook"),
@@ -71,8 +65,7 @@ if (Meteor.isClient) {
 
   Template.text.rendered = function () {
 
-    lst = SessionAmplify.get("numCompleted");
-    numCompleted = lst[SessionAmplify.get("whichBook")];
+    numCompleted = SessionAmplify.get(SessionAmplify.get("whichBook"));
 
     $('body').on('keyup', function (event) {
       lockedKeys = [];
@@ -144,8 +137,7 @@ if (Meteor.isClient) {
       lockedKeys = lockedKeys.unique();
 
       // Update amplify storage
-      lst[SessionAmplify.get("whichBook")] = numCompleted;
-      SessionAmplify.set("numCompleted", lst);
+      SessionAmplify.set(SessionAmplify.get("whichBook"), numCompleted);
     });
 
     // Assign each paragraph an id, starting at 0.
