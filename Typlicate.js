@@ -60,7 +60,6 @@ if (Meteor.isClient) {
       SessionAmplify.set("whichBook", "gatsby");
     }
     if(typeof SessionAmplify.get("numCompleted") === "undefined") {
-      console.log("startup")
       d = [];
       lst = {};
       $("#selectText>option").each(function () {
@@ -108,9 +107,6 @@ if (Meteor.isClient) {
 
     $('body').on('keypress', function(event) {
 
-      console.log(numCompleted)
-      console.log("woot")
-
       if (event.which == 32) {
         event.stopPropagation();
         event.preventDefault();
@@ -156,7 +152,6 @@ if (Meteor.isClient) {
       lockedKeys = lockedKeys.unique();
 
       // Update amplify storage
-      console.log(numCompleted)
       lst[SessionAmplify.get("whichBook")] = numCompleted;
       SessionAmplify.set("numCompleted", lst);
     });
