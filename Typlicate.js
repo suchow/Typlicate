@@ -126,7 +126,7 @@ if (Meteor.isClient) {
 
     // Assign each paragraph an id, starting at 0.
     x = $("p");
-    for (var i = 0; i <= x.length; i++) {
+    for (var i = 0; i < x.length; i++) {
       x[i].id = i;
       if (i >= SessionAmplify.get("numCompleted")) {
         x[i].className += "incomplete";
@@ -136,6 +136,10 @@ if (Meteor.isClient) {
         x[i].className += "complete";
       }
     };
+
+    // Automatically scroll to the first unfinished paragraph.
+    c = $("#" + SessionAmplify.get("numCompleted"));
+    window.smoothScroll(c.offset().top-195);
   };
 }
 
