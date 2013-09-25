@@ -49,12 +49,11 @@ if (Meteor.isClient) {
   });
 
   Meteor.startup(function () {
+
+    // Set options for Markdown => HTML conversion.
     marked.setOptions({
       smartypants: true,
     });
-  });
-
-  Meteor.startup(function () {
     // Reload variables from amplify
     if(typeof SessionAmplify.get("whichBook") === "undefined") {
       SessionAmplify.set("whichBook", "gatsby");
@@ -177,10 +176,7 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-  });
-
+  // Returns the text of the requested book.
   Meteor.methods({
     getBook: function (bookName) {
       var path = Npm.require('path');
