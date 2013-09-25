@@ -33,10 +33,12 @@ if (Meteor.isClient) {
   SessionAmplify.set("book", "Loading...");
   positionInParagraph = 0;
   lockedKeys = [];
+  brCount = 0;
 
   Meteor.Router.add({
     '/:id': function(id) {
       SessionAmplify.set('whichBook', id);
+      brCount = 0;
     }
   });
 
@@ -112,30 +114,38 @@ if (Meteor.isClient) {
       }
 
       thisParagraph = $("#" + numCompleted).text();
+      isEndOfParagraph = (positionInParagraph === thisParagraph.length);
       currentSymbol = thisParagraph[positionInParagraph];
       chosenSymbol = String.fromCharCode(event.which)
 
       if(!lockedKeys.contains(chosenSymbol)) {
-        // If the current symbol is a newline character, give a free pass.
+        // If the current symbol is a space character, give a free pass.
         if (currentSymbol === " ") {
           positionInParagraph += 1;
           currentSymbol = thisParagraph[positionInParagraph];
         };
 
+        if (currentSymbol === "\n" && !isEndOfParagraph) {
+          positionInParagraph += 1;
+          currentSymbol = thisParagraph[positionInParagraph];
+          brCount += 1;
+        };
+
         // If the current symbol matches the input, proceed.
         if (equivalent(chosenSymbol, currentSymbol)) {
           positionInParagraph += 1;
+          $("br").replaceWith("CODEX")
           c = $("#" + numCompleted);
           c.html('<span class="complete">' +
-                 c.text().substring(0, positionInParagraph) +
+                 c.text().substring(0, positionInParagraph+brCount*5) +
                  '</span><span id="upcoming"></span>' +
-                 c.text().substring(positionInParagraph, c.text().length))
+                 c.text().substring(positionInParagraph+brCount*5, c.text().length))
+          $("body").html($("body").html().replace(/CODEX/g, "<br/>"))
           u = $("#upcoming");
           window.smoothScroll(u.offset().top-200);
         }
 
         // If we just finished a paragraph, move on to the next one w/ return.
-        if (positionInParagraph === thisParagraph.length && event.which == 13) {
 
           // Move the upcoming span to the start of the next paragraph.
           $('#upcoming').remove();
@@ -145,6 +155,7 @@ if (Meteor.isClient) {
           u = $("#upcoming");
           window.smoothScroll(u.offset().top-200);
           positionInParagraph = 0;
+          brCount = 0;
         }
       }
       lockedKeys.push(chosenSymbol);
