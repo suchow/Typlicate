@@ -1,28 +1,8 @@
-// Should the two characters, c1 and c2, be treated as equivalent?
-var equivalent = function(c1, c2) {
-  // If there's a perfect match, accept.
-  if (c1 == c2) {
-    return true;
-  }
-
-  // If there's a near match, accept.
-  var d = { "\"": ["\“", "\”"],
-            "\'": ["\’", "\‘"],
-            "-" : ["–", "—"],
-            "e" : ["é"],
-          };
-
-  if (typeof d[c1] !== "undefined" && d[c1].contains(c2)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 if (Meteor.isClient) {
 
+  // Store session variables in the browser's local storage.
   SessionAmplify = _.extend({}, Session, {
-    keys: _.object(_.map(amplify.store(), function(value, key) {
+    keys: _.object(_.map(amplify.store(), function (value, key) {
       return [key, JSON.stringify(value)]
     })),
     set: function (key, value) {
@@ -37,11 +17,16 @@ if (Meteor.isClient) {
   brCount = 0;
 
   Meteor.Router.add({
-    '/:id': function(id) {
+    '/:id': function (id) {
       SessionAmplify.set('whichBook', id);
       brCount = 0;
     }
   });
+
+  scrollToUpcoming = function () {
+    u = $("#upcoming");
+    window.smoothScroll(u.offset().top - 200);
+  }
 
   $(function () {
     $("#selectText").live("change", function (event) {
@@ -57,7 +42,8 @@ if (Meteor.isClient) {
     marked.setOptions({
       smartypants: true,
     });
-    // Reload variables from amplify
+
+    // Reload variables from browser storage.
     if(typeof SessionAmplify.get("whichBook") === "undefined") {
       SessionAmplify.set("whichBook", "gatsby");
     }
@@ -88,24 +74,22 @@ if (Meteor.isClient) {
 
   Template.text.rendered = function () {
 
-    $('#selectText').val(SessionAmplify.get("whichBook"))
-
     lst = SessionAmplify.get("numCompleted");
     numCompleted = lst[SessionAmplify.get("whichBook")];
 
-    $('body').on('keyup', function(event) {
+    $('body').on('keyup', function (event) {
       lockedKeys = [];
     });
 
     // Disabe backspace.
-    $('body').on('keydown', function(event) {
+    $('body').on('keydown', function (event) {
       if (event.which === 8) {
         event.stopPropagation();
         event.preventDefault();
       }
     });
 
-    $('body').on('keypress', function(event) {
+    $('body').on('keypress', function (event) {
 
       if (event.which == 32) {
         event.stopPropagation();
@@ -116,6 +100,8 @@ if (Meteor.isClient) {
       isEndOfParagraph = (positionInParagraph === thisParagraph.length);
       currentSymbol = thisParagraph[positionInParagraph];
       chosenSymbol = String.fromCharCode(event.which)
+
+      $('#selectText').val(SessionAmplify.get("whichBook"))
 
       if(!lockedKeys.contains(chosenSymbol)) {
         // If the current symbol is a space character, give a free pass.
@@ -131,17 +117,16 @@ if (Meteor.isClient) {
         };
 
         // If the current symbol matches the input, proceed.
-        if (equivalent(chosenSymbol, currentSymbol)) {
+        if (equivalentChars(chosenSymbol, currentSymbol)) {
           positionInParagraph += 1;
-          $("br").replaceWith("CODEX")
+          $("br").replaceWith("%#%#%#")
           c = $("#" + numCompleted);
           c.html('<span class="complete">' +
-                 c.text().substring(0, positionInParagraph+brCount*5) +
+                 c.text().substring(0, positionInParagraph + brCount*6) +
                  '</span><span id="upcoming"></span>' +
-                 c.text().substring(positionInParagraph+brCount*5, c.text().length))
-          $("body").html($("body").html().replace(/CODEX/g, "<br/>"))
-          u = $("#upcoming");
-          window.smoothScroll(u.offset().top-200);
+                 c.text().substring(positionInParagraph + brCount*6, c.text().length))
+          $("body").html($("body").html().replace(/%#%#%#/g, "<br/>"))
+          scrollToUpcoming();
         }
 
         // If we just finished a paragraph, move on to the next one w/ return.
@@ -152,8 +137,7 @@ if (Meteor.isClient) {
           numCompleted += 1;
           c = $("#" + numCompleted);
           c.prepend("<span id='upcoming'>")
-          u = $("#upcoming");
-          window.smoothScroll(u.offset().top-200);
+          scrollToUpcoming();
           positionInParagraph = 0;
           brCount = 0;
         }
@@ -168,7 +152,6 @@ if (Meteor.isClient) {
 
     // Assign each paragraph an id, starting at 0.
     x = $("p");
-
     for (var i = 0; i < x.length; i++) {
       x[i].id = i;
       if (i >= numCompleted) {

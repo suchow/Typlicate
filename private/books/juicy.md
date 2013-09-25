@@ -45,6 +45,7 @@ You had a goal, but not that many<br/>
 Cause you're the only one I'll give you good and plenty<br/>
 
 ## VERSE 2
+
 I made the change from a common thief<br/>
 To up close and personal with Robin Leach<br/>
 And I'm far from cheap, I smoke skunk with my peeps all day<br/>
@@ -69,6 +70,7 @@ Uh...and if you don't know, now you know, nigga<br/>
 ## (REPEAT HOOK)
 
 ## VERSE 3
+
 Super Nintendo, Sega Genesis<br/>
 When I was dead broke, man I couldn't picture this<br/>
 50-inch screen, money green leather sofa<br/>

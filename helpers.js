@@ -20,3 +20,24 @@ Array.prototype.unique = function() {
   }
   return arr;
 }
+
+// Should the two characters, c1 and c2, be treated as equivalent?
+equivalentChars = function(c1, c2) {
+  // If there's a perfect match, accept.
+  if (c1 === c2) {
+    return true;
+  }
+
+  // If there's a near match, accept.
+  var d = { "\"": ["\“", "\”"],
+            "\'": ["\’", "\‘"],
+            "-" : ["–", "—"],
+            "e" : ["é"],
+          };
+
+  if (typeof d[c1] !== "undefined" && d[c1].contains(c2)) {
+    return true;
+  } else {
+    return false;
+  }
+}
