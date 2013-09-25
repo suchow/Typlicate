@@ -13,9 +13,10 @@ if (Meteor.isClient) {
 
   SessionAmplify.set("book", "Loading...");
   positionInParagraph = 0;
-  lockedKeys = [];
   brCount = 0;
+  lockedKeys = [];
 
+  // Treat URL as a request for a certain text.
   Meteor.Router.add({
     '/:id': function (id) {
       SessionAmplify.set('whichBook', id);
@@ -23,11 +24,7 @@ if (Meteor.isClient) {
     }
   });
 
-  scrollToUpcoming = function () {
-    u = $("#upcoming");
-    window.smoothScroll(u.offset().top - 200);
-  }
-
+  // When the user selects a new text, route em there.
   $(function () {
     $("#selectText").live("change", function (event) {
       $('#selectText').blur();
@@ -36,32 +33,32 @@ if (Meteor.isClient) {
     });
   });
 
-  Meteor.startup(function () {
+  // Scroll to the element with id #upcoming.
+  scrollToUpcoming = function () {
+    u = $("#upcoming");
+    window.smoothScroll(u.offset().top - 200);
+  }
 
-    // Set options for Markdown => HTML conversion.
-    marked.setOptions({
-      smartypants: true,
-    });
-
-    // Reload variables from browser storage.
-    if(typeof SessionAmplify.get("whichBook") === "undefined") {
-      SessionAmplify.set("whichBook", "gatsby");
-    }
-    if(typeof SessionAmplify.get("numCompleted") === "undefined") {
-      d = [];
-      lst = {};
-      $("#selectText>option").each(function () {
-        lst[$(this).val()] = 1;
-      });
-      SessionAmplify.set("numCompleted", lst);
-    };
-    Meteor.call('getBook', SessionAmplify.get("whichBook"),
-      function (error, result) {
-        SessionAmplify.set("book", result);
-      }
-    );
+  // Set options for Markdown => HTML conversion.
+  marked.setOptions({
+    smartypants: true,
   });
 
+  // Reload variables from browser storage.
+  if(typeof SessionAmplify.get("whichBook") === "undefined") {
+    SessionAmplify.set("whichBook", "gatsby");
+  }
+
+  // Initialize empty list of progress.
+  if(typeof SessionAmplify.get("numCompleted") === "undefined") {
+    lst = {};
+    $("#selectText>option").each(function () {
+      lst[$(this).val()] = 1;
+    });
+    SessionAmplify.set("numCompleted", lst);
+  };
+
+  // Store the full text of the book in local storage.
   Template.text.book = function () {
     Meteor.call('getBook', SessionAmplify.get("whichBook"),
       function (error, result) {
@@ -117,15 +114,16 @@ if (Meteor.isClient) {
         };
 
         // If the current symbol matches the input, proceed.
+        // This works, but is shameful.
         if (equivalentChars(chosenSymbol, currentSymbol)) {
           positionInParagraph += 1;
-          $("br").replaceWith("%#%#%#")
+          $("#" + numCompleted + " br").replaceWith("%#%#%#")
           c = $("#" + numCompleted);
           c.html('<span class="complete">' +
                  c.text().substring(0, positionInParagraph + brCount*6) +
                  '</span><span id="upcoming"></span>' +
                  c.text().substring(positionInParagraph + brCount*6, c.text().length))
-          $("body").html($("body").html().replace(/%#%#%#/g, "<br/>"))
+          $("#" + numCompleted).html($("#" + numCompleted).html().replace(/%#%#%#/g, "<br/>"))
           scrollToUpcoming();
         }
 
