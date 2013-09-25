@@ -20,31 +20,45 @@ var equivalent = function(c1, c2) {
 
 if (Meteor.isClient) {
 
+  SessionAmplify = _.extend({}, Session, {
+    keys: _.object(_.map(amplify.store(), function(value, key) {
+      return [key, JSON.stringify(value)]
+    })),
+    set: function (key, value) {
+      Session.set.apply(this, arguments);
+      amplify.store(key, value);
+    },
+  });
+
   Meteor.startup(function () {
     marked.setOptions({
       smartypants: true,
     });
   });
 
-  Session.set("book", "Loading...");
-  numCompleted = 1;
+  SessionAmplify.set("book", "Loading...");
   positionInParagraph = 0;
   lockedKeys = [];
 
   Meteor.startup(function () {
     Meteor.call('getBook', 'gatsby',
       function (error, result) {
-        Session.set("book", result);
+        SessionAmplify.set("book", result);
       }
     );
   });
 
   Template.text.book = function () {
-    text = Session.get("book");
+    text = SessionAmplify.get("book");
     return marked(text);
   };
 
   Template.text.rendered = function () {
+
+    // Reload variables from amplify
+    if(typeof SessionAmplify.get("numCompleted") === "undefined") {
+      SessionAmplify.set("numCompleted", 1);
+    }
 
     $('body').on('keyup', function(event) {
       lockedKeys = [];
@@ -59,6 +73,8 @@ if (Meteor.isClient) {
     });
 
     $('body').on('keypress', function(event) {
+
+      var numCompleted = SessionAmplify.get("numCompleted")
 
       if (event.which == 32) {
         event.stopPropagation();
@@ -103,15 +119,18 @@ if (Meteor.isClient) {
       }
       lockedKeys.push(chosenSymbol);
       lockedKeys = lockedKeys.unique();
+
+      // Update amplify storage
+      SessionAmplify.set("numCompleted", numCompleted);
     });
 
     // Assign each paragraph an id, starting at 0.
     x = $("p");
     for (var i = 0; i <= x.length; i++) {
       x[i].id = i;
-      if (i >= numCompleted) {
+      if (i >= SessionAmplify.get("numCompleted")) {
         x[i].className += "incomplete";
-      } else if (i == numCompleted+1) {
+      } else if (i == SessionAmplify.get("numCompleted")+1) {
         x[i].className += "current";
       } else {
         x[i].className += "complete";
