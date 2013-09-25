@@ -170,7 +170,7 @@ if (Meteor.isClient) {
     };
 
     // Automatically scroll to the first unfinished paragraph.
-    c = $("#" + SessionAmplify.get("numCompleted"));
+    c = $("#" + numCompleted);
     window.smoothScroll(c.offset().top-195);
   };
 }
