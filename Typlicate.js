@@ -52,9 +52,30 @@ if (Meteor.isClient) {
     SessionAmplify.set("whichBook", "gatsby");
   }
 
+  // Store the title of the book in local storage.
+  Template.text.title = function () {
+    Meteor.call('getTitle', SessionAmplify.get("whichBook"),
+      function (error, result) {
+        SessionAmplify.set("title", result);
+      }
+    );
+    return SessionAmplify.get("title");
+  };
+
+  // Store the title of the book in local storage.
+  Template.text.author = function () {
+    Meteor.call('getAuthor', SessionAmplify.get("whichBook"),
+      function (error, result) {
+        SessionAmplify.set("author", result);
+      }
+    );
+    return SessionAmplify.get("author");
+  };
+
+
   // Store the full text of the book in local storage.
   Template.text.book = function () {
-    Meteor.call('getBook', SessionAmplify.get("whichBook"),
+    Meteor.call('getText', SessionAmplify.get("whichBook"),
       function (error, result) {
         SessionAmplify.set("book", result);
       }
@@ -160,12 +181,27 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
+
+  getJSON = function (name) {
+    return JSON.parse(Assets.getText(name.concat('.json')));
+  }
+
   // Returns the text of the requested book.
   Meteor.methods({
-    getBook: function (bookName) {
+    getText: function (name) {
       var path = Npm.require('path');
-      p = path.join('books', bookName.concat('.md'));
-      return Assets.getText(p);
+      js = getJSON(name);
+      return Assets.getText(path.join('books', js['MarkdownFile']));
+    },
+
+    getTitle: function (name) {
+      js = getJSON(name);
+      return js['Title'];
+    },
+
+    getAuthor: function (name) {
+      js = getJSON(name);
+      return js['Author'];
     }
   });
 }

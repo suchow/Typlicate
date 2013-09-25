@@ -1,5 +1,3 @@
-In the Desert, by Stephen Crane
-
 In the desert<br/>
 I saw a creature, naked, bestial,<br/>
 Who, squatting upon the ground,<br/>

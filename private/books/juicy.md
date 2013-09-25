@@ -1,5 +1,3 @@
-Juicy, by The Notorious B.I.G.
-
 ## INTRO
 
 Fuck all y'all hoes<br/>
