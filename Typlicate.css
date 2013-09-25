@@ -17,10 +17,12 @@ h1 {
 
 h2 {
   font-family: 'Open Sans', sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 3px;
   padding-top: 35px;
-  color: #ADD8C7;
+  padding-bottom: 0px;
+  margin-bottom: -20px;
+  color: #1693A5;
 }
 
 .complete {
@@ -32,10 +34,12 @@ h2 {
 }
 
 #selectText {
-  float: left;
+  float: right;
+}
+
 .title {
   font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 54px;
 }
 
